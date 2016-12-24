@@ -47,4 +47,27 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
 
     assert_equal repository.model_elements_by_container(:entity), [element2, element3]
   end
+
+  def test_lock
+    repository = Reality::Model::Repository.new(:Domgen)
+
+    assert_equal repository.locked?, false
+
+    repository.model_element(:entity)
+    repository.model_element(:attribute, :entity)
+
+    assert_equal repository.model_elements.size, 2
+
+    repository.lock!
+
+    assert_equal repository.locked?, true
+
+    assert_raise(RuntimeError.new("Attempting to define model element 'Domgen.view' when repository is locked.")) do
+      repository.model_element(:view, :entity)
+    end
+
+    assert_raise(RuntimeError.new("Attempting to lock repository 'Domgen' when repository is already locked.")) do
+      repository.lock!
+    end
+  end
 end

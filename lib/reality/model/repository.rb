@@ -20,6 +20,7 @@ module Reality #nodoc
 
       def initialize(key)
         @key = key
+        @locked = false
       end
 
       def model_element_keys
@@ -48,9 +49,20 @@ module Reality #nodoc
         model_element_map.values.select { |model_element| model_element.container_key == container_key }
       end
 
+      # This method is called when the repository is finalized, after which no changes can be made.
+      def lock!
+        Reality::Model.error("Attempting to lock repository '#{key}' when repository is already locked.") if locked?
+        @locked = true
+      end
+
+      def locked?
+        @locked
+      end
+
       private
 
       def register_model_element(model_element)
+        Reality::Model.error("Attempting to define model element '#{model_element.qualified_key}' when repository is locked.") if locked?
         raise "Attempting to redefine model element '#{model_element.qualified_key}'" if model_element_map[model_element.key.to_s]
         model_element_map[model_element.key.to_s] = model_element
       end
