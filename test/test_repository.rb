@@ -11,7 +11,7 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
 
     assert_equal repository.model_element_by_key?(:entity), false
 
-    assert_raise(RuntimeError.new("Can not find model element 'entity' in repository 'MyTypeSystem'.")) do
+    assert_model_error("Can not find model element 'entity' in repository 'MyTypeSystem'.") do
       repository.model_element_by_key(:entity)
     end
 
@@ -30,7 +30,7 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
 
     assert_equal repository.model_element_by_key?(:entity), true
 
-    assert_raise(RuntimeError.new("Attempting to redefine model element 'MyTypeSystem.entity'")) do
+    assert_model_error("Attempting to redefine model element 'MyTypeSystem.entity'") do
       repository.model_element(:entity)
     end
   end
@@ -62,11 +62,11 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
 
     assert_equal repository.locked?, true
 
-    assert_raise(RuntimeError.new("Attempting to define model element 'Domgen.view' when repository is locked.")) do
+    assert_model_error("Attempting to define model element 'Domgen.view' when repository is locked.") do
       repository.model_element(:view, :entity)
     end
 
-    assert_raise(RuntimeError.new("Attempting to lock repository 'Domgen' when repository is already locked.")) do
+    assert_model_error("Attempting to lock repository 'Domgen' when repository is already locked.") do
       repository.lock!
     end
   end
