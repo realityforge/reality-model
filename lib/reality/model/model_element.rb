@@ -35,6 +35,8 @@ module Reality #nodoc
         end
 
         @repository.send(:register_model_element, self)
+
+        yield self if block_given?
       end
 
       attr_reader :repository

@@ -15,6 +15,21 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
     assert_equal repository.model_element_by_key?(:entity), true
   end
 
+  def test_yield
+    repository = Reality::Model::Repository.new(:MyTypeSystem)
+    Reality::Model::ModelElement.new(repository, :entity, nil, {}) do |element|
+
+      assert_equal element.repository, repository
+      assert_equal element.key, :entity
+      assert_equal element.container_key, nil
+      assert_equal element.model_classname, :Entity
+      assert_equal element.access_method, :entities
+      assert_equal element.inverse_access_method, :entity
+
+      assert_equal repository.model_element_by_key?(:entity), true
+    end
+  end
+
   def test_basic_operation_with_no_defaults
     repository = Reality::Model::Repository.new(:MyTypeSystem)
     element = Reality::Model::ModelElement.new(repository, :entity, nil, :model_classname => :MyEntity, :access_method => :ents, :inverse_access_method => :ent)
