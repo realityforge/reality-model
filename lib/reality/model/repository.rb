@@ -36,7 +36,7 @@ module Reality #nodoc
 
       def model_element_by_key(key)
         model_element = model_element_map[key.to_s]
-        Reality::Model.error("Can not find model element '#{key}' in repository '#{self.key}'") unless model_element
+        Reality::Model.error("Can not find model element '#{key}' in repository '#{self.key}'.") unless model_element
         model_element
       end
 

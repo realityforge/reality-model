@@ -11,7 +11,7 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
 
     assert_equal repository.model_element_by_key?(:entity), false
 
-    assert_raise(RuntimeError.new("Can not find model element 'entity' in repository 'MyTypeSystem'")) do
+    assert_raise(RuntimeError.new("Can not find model element 'entity' in repository 'MyTypeSystem'.")) do
       repository.model_element_by_key(:entity)
     end
 
