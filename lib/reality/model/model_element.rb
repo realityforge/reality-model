@@ -43,6 +43,10 @@ module Reality #nodoc
       attr_reader :model_classname
       attr_reader :access_method
       attr_reader :inverse_access_method
+
+      def qualified_key
+        "#{repository.key}.#{self.key}"
+      end
     end
   end
 end

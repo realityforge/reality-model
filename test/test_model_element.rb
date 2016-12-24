@@ -21,6 +21,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
 
     assert_equal element.repository, repository
     assert_equal element.key, :entity
+    assert_equal element.qualified_key, 'MyTypeSystem.entity'
     assert_equal element.container_key, nil
     assert_equal element.model_classname, :MyEntity
     assert_equal element.access_method, :ents
