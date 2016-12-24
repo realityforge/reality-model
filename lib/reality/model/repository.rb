@@ -21,6 +21,10 @@ module Reality #nodoc
       def initialize(key)
         @key = key
         @locked = false
+        if block_given?
+          yield self
+          lock!
+        end
       end
 
       def model_element_keys

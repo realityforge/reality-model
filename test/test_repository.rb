@@ -23,6 +23,17 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
     assert_equal repository.model_elements_by_container(:entity), []
   end
 
+  def test_yield
+    repository = Reality::Model::Repository.new(:MyTypeSystem) do |repository|
+      repository.model_element(:entity)
+    end
+
+    assert_equal repository.locked?, true
+
+    assert_equal repository.key, :MyTypeSystem
+    assert_equal repository.model_element_by_key?(:entity), true
+  end
+
   def test_register_duplicates
     repository = Reality::Model::Repository.new(:MyTypeSystem)
 
