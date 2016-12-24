@@ -31,14 +31,14 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
   end
 
   def test_bad_key
-    message = "Model Element 'Entity' has a key that does not use the underscore naming pattern (i.e. The key should be 'entity')."
+    message = "Model Element 'MyTypeSystem.Entity' has a key 'Entity' that does not use the underscore naming pattern (i.e. The key should be 'entity')."
     assert_raise(RuntimeError.new(message)) do
       Reality::Model::ModelElement.new(Reality::Model::Repository.new(:MyTypeSystem), :Entity, nil, {})
     end
   end
 
   def test_bad_container_key
-    message = "Model Element 'component' defines container as 'bundle' but no such model element exists."
+    message = "Model Element 'MyTypeSystem.component' defines container as 'bundle' but no such model element exists."
     assert_raise(RuntimeError.new(message)) do
       Reality::Model::ModelElement.new(Reality::Model::Repository.new(:MyTypeSystem), :component, :bundle, {})
     end

@@ -27,11 +27,11 @@ module Reality #nodoc
         @container_key = container_key.nil? ? nil : container_key.to_sym
 
         unless Reality::Naming.underscore?(@key)
-          Reality::Model.error("Model Element '#{key}' has a key that does not use the underscore naming pattern (i.e. The key should be '#{Reality::Naming.underscore(@key)}').")
+          Reality::Model.error("Model Element '#{qualified_key}' has a key '#{key}' that does not use the underscore naming pattern (i.e. The key should be '#{Reality::Naming.underscore(@key)}').")
         end
 
         if @container_key && !repository.model_element_by_key?(@container_key)
-          Reality::Model.error("Model Element '#{key}' defines container as '#{@container_key}' but no such model element exists.")
+          Reality::Model.error("Model Element '#{qualified_key}' defines container as '#{@container_key}' but no such model element exists.")
         end
 
         @repository.send(:register_model_element, self)
