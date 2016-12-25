@@ -457,7 +457,7 @@ CODE
   end
 
   def test_define_ruby_class_with_heavy_customization
-    repository = Reality::Model::Repository.new(:Resgen, ResgenContainer)
+    repository = Reality::Model::Repository.new(:Resgen, ResgenContainer2)
     model1 = Reality::Model::ModelElement.new(repository, :project, nil, :custom_initialize => true, :model_classname => :Prj, :inverse_access_method => :prj, :id_method => :key)
     model2 = Reality::Model::ModelElement.new(repository, :bundle, :project, :custom_initialize => true, :inverse_access_method => :bnd, :access_method => :bnds, :id_method => :key)
 
