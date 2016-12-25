@@ -23,6 +23,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
       assert_equal element.key, :entity
       assert_equal element.container_key, nil
       assert_equal element.model_classname, :Entity
+      assert_equal element.id_method, :name
       assert_equal element.access_method, :entities
       assert_equal element.inverse_access_method, :entity
 
@@ -39,6 +40,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
     assert_equal element.qualified_key, 'MyTypeSystem.entity'
     assert_equal element.container_key, nil
     assert_equal element.model_classname, :MyEntity
+    assert_equal element.id_method, :key
     assert_equal element.access_method, :ents
     assert_equal element.inverse_access_method, :ent
 

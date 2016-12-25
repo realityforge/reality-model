@@ -22,6 +22,7 @@ module Reality #nodoc
         @key = key.to_sym
         @model_classname = (options[:model_classname] || Reality::Naming.pascal_case(key)).to_sym
 
+        @id_method = (options[:id_method] || :name).to_sym
         @access_method = (options[:access_method] || Reality::Naming.pluralize(@key)).to_sym
         @inverse_access_method = (options[:inverse_access_method] || @key).to_sym
         @container_key = container_key.nil? ? nil : container_key.to_sym
@@ -43,6 +44,7 @@ module Reality #nodoc
       attr_reader :key
       attr_reader :container_key
       attr_reader :model_classname
+      attr_reader :id_method
       attr_reader :access_method
       attr_reader :inverse_access_method
 
