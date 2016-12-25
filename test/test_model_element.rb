@@ -9,6 +9,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
     assert_equal element.key, :entity
     assert_equal element.container_key, nil
     assert_equal element.model_classname, :Entity
+    assert_equal element.custom_initialize?, false
     assert_equal element.id_method, :name
     assert_equal element.access_method, :entities
     assert_equal element.inverse_access_method, :entity
@@ -31,6 +32,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
       assert_equal element.key, :entity
       assert_equal element.container_key, nil
       assert_equal element.model_classname, :Entity
+      assert_equal element.custom_initialize?, false
       assert_equal element.id_method, :name
       assert_equal element.access_method, :entities
       assert_equal element.inverse_access_method, :entity
@@ -41,13 +43,14 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
 
   def test_basic_operation_with_no_defaults
     repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
-    element = Reality::Model::ModelElement.new(repository, :entity, nil, :model_classname => :MyEntity, :access_method => :ents, :inverse_access_method => :ent, :id_method => :key)
+    element = Reality::Model::ModelElement.new(repository, :entity, nil, :model_classname => :MyEntity, :access_method => :ents, :inverse_access_method => :ent, :id_method => :key, :custom_initialize => true)
 
     assert_equal element.repository, repository
     assert_equal element.key, :entity
     assert_equal element.qualified_key, 'MyTypeSystem.entity'
     assert_equal element.container_key, nil
     assert_equal element.model_classname, :MyEntity
+    assert_equal element.custom_initialize?, true
     assert_equal element.id_method, :key
     assert_equal element.access_method, :ents
     assert_equal element.inverse_access_method, :ent

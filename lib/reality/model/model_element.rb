@@ -22,6 +22,8 @@ module Reality #nodoc
         @key = key.to_sym
         @model_classname = (options[:model_classname] || Reality::Naming.pascal_case(key)).to_sym
 
+        @custom_initialize = options[:custom_initialize].nil? ? false : !!options[:custom_initialize]
+
         @id_method = (options[:id_method] || repository.id_method).to_sym
         @access_method = (options[:access_method] || Reality::Naming.pluralize(@key)).to_sym
         @inverse_access_method = (options[:inverse_access_method] || @key).to_sym
@@ -58,6 +60,10 @@ module Reality #nodoc
       attr_reader :id_method
       attr_reader :access_method
       attr_reader :inverse_access_method
+
+      def custom_initialize?
+        @custom_initialize
+      end
 
       def qualified_key
         "#{repository.key}.#{self.key}"
