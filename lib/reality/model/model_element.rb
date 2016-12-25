@@ -109,8 +109,10 @@ class #{self.model_classname}
         end
         code += <<-RUBY
     #{self.repository.log_container}.info "#{self.model_classname} '\#{#{self.id_method}}' definition started."
+    pre_init if respond_to?(:pre_init, true)
     self.options = options
     yield self if block_given?
+    post_init if respond_to?(:post_init, true)
     #{self.repository.log_container}.info "#{self.model_classname} '\#{#{self.id_method}}' definition completed."
   end
         RUBY

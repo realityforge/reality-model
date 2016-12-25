@@ -194,8 +194,10 @@ class Bundle
   def initialize(name, options = {}, &block)
     @name = name
     Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition started."
+    pre_init if respond_to?(:pre_init, true)
     self.options = options
     yield self if block_given?
+    post_init if respond_to?(:post_init, true)
     Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition completed."
   end
 
@@ -235,8 +237,10 @@ class Bundle
     @project = project
     @project.send(:register_bundle, self)
     Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition started."
+    pre_init if respond_to?(:pre_init, true)
     self.options = options
     yield self if block_given?
+    post_init if respond_to?(:post_init, true)
     Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition completed."
   end
 
@@ -272,8 +276,10 @@ class Bundle
   def perform_init(name, options = {}, &block)
     @name = name
     Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition started."
+    pre_init if respond_to?(:pre_init, true)
     self.options = options
     yield self if block_given?
+    post_init if respond_to?(:post_init, true)
     Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition completed."
   end
 
@@ -313,8 +319,10 @@ class Bundle
     @name = name
     Reality::Model::TestModelElement::MyFacetManager.target_manager.apply_extension(self)
     Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition started."
+    pre_init if respond_to?(:pre_init, true)
     self.options = options
     yield self if block_given?
+    post_init if respond_to?(:post_init, true)
     Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition completed."
   end
 
@@ -351,8 +359,10 @@ class Project
   def initialize(name, options = {}, &block)
     @name = name
     Reality::Model::TestCase::MyContainer.info "Project '\#{name}' definition started."
+    pre_init if respond_to?(:pre_init, true)
     self.options = options
     yield self if block_given?
+    post_init if respond_to?(:post_init, true)
     Reality::Model::TestCase::MyContainer.info "Project '\#{name}' definition completed."
   end
 
