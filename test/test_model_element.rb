@@ -193,6 +193,7 @@ class Bundle
 
   def initialize(name, options = {}, &block)
     @name = name
+    Reality::Model::TestCase::MyContainer.send(:register_bundle, self)
     Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition started."
     pre_init if respond_to?(:pre_init, true)
     self.options = options
@@ -275,6 +276,7 @@ class Bundle
 
   def perform_init(name, options = {}, &block)
     @name = name
+    Reality::Model::TestCase::MyContainer.send(:register_bundle, self)
     Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition started."
     pre_init if respond_to?(:pre_init, true)
     self.options = options
@@ -317,6 +319,7 @@ class Bundle
 
   def initialize(name, options = {}, &block)
     @name = name
+    Reality::Model::TestCase::MyContainer.send(:register_bundle, self)
     Reality::Model::TestModelElement::MyFacetManager.target_manager.apply_extension(self)
     Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition started."
     pre_init if respond_to?(:pre_init, true)

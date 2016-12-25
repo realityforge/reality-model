@@ -96,7 +96,11 @@ class #{self.model_classname}
   def #{self.custom_initialize? ? 'perform_init' : 'initialize'}(#{self.container_key.nil? ? '' : "#{container.inverse_access_method}, "}#{self.id_method}, options = {}, &block)
     @#{self.id_method} = #{self.id_method}
         RUBY
-        unless self.container_key.nil?
+        if self.container_key.nil?
+          code += <<-RUBY
+    #{self.repository.instance_container}.send(:register_#{self.inverse_access_method}, self)
+          RUBY
+        else
           code += <<-RUBY
     @#{container.inverse_access_method} = #{container.inverse_access_method}
     @#{container.inverse_access_method}.send(:register_#{self.inverse_access_method}, self)
