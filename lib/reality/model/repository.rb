@@ -16,6 +16,7 @@ module Reality #nodoc
   module Model #nodoc
 
     class Repository
+      # A symbolic name for the system model
       attr_reader :key
 
       def initialize(key)
