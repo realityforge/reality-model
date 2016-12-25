@@ -107,7 +107,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
   public
 
   def component(name, options = {}, &block)
-    Component.new(name, options, &block)
+    Reality::Model::TestCase::MyContainer::Component.new(name, options, &block)
   end
 
   def component_by_name?(name)
