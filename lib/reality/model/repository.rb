@@ -20,10 +20,14 @@ module Reality #nodoc
       attr_reader :key
       # The ruby module in which all the model elements will be defined
       attr_reader :model_container
+      # The default name of the method that used as the key or identity field for model. This can
+      # be overriden at a model element level.
+      attr_reader :id_method
 
-      def initialize(key, model_container)
+      def initialize(key, model_container, options = {})
         @key = key
         @model_container = model_container
+        @id_method = (options[:id_method] || :name).to_sym
         @locked = false
         if block_given?
           yield self

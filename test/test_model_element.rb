@@ -16,6 +16,13 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
     assert_equal repository.model_element_by_key?(:entity), true
   end
 
+  def test_default_value_of_id_method
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer, :id_method => :key)
+    element = Reality::Model::ModelElement.new(repository, :entity, nil, {})
+
+    assert_equal element.id_method, :key
+  end
+
   def test_yield
     repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
     Reality::Model::ModelElement.new(repository, :entity, nil, {}) do |element|
