@@ -173,4 +173,229 @@ CODE
   end
 CODE
   end
+
+  def test_build_model_code
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
+    element1 = Reality::Model::ModelElement.new(repository, :bundle, nil, {})
+
+    code = element1.send(:build_model_code)
+    assert_equal code, <<CODE
+class Bundle
+  attr_reader :name
+
+  def initialize(name, options = {}, &block)
+    @name = name
+    Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition started."
+    self.options = options
+    yield self if block_given?
+    Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition completed."
+  end
+
+  public
+
+  def options=(options)
+    options.each_pair do |k, v|
+      keys = k.to_s.split('.')
+      target = self
+      keys[0, keys.length - 1].each do |target_accessor_key|
+        target = target.send target_accessor_key.to_sym
+      end
+      begin
+        target.send "\#{keys.last}=", v
+      rescue NoMethodError
+        raise "Attempted to configure property \\"\#{keys.last}\\" on Bundle but property does not exist."
+      end
+    end
+  end
+end
+CODE
+  end
+
+  def test_build_model_code_for_contained_model
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
+    Reality::Model::ModelElement.new(repository, :project, nil, {})
+    element1 = Reality::Model::ModelElement.new(repository, :bundle, :project, {})
+
+    code = element1.send(:build_model_code)
+    assert_equal code, <<CODE
+class Bundle
+  attr_reader :name
+  attr_reader :project
+
+  def initialize(project, name, options = {}, &block)
+    @name = name
+    @project = project
+    @project.send(:register_bundle, self)
+    Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition started."
+    self.options = options
+    yield self if block_given?
+    Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition completed."
+  end
+
+  public
+
+  def options=(options)
+    options.each_pair do |k, v|
+      keys = k.to_s.split('.')
+      target = self
+      keys[0, keys.length - 1].each do |target_accessor_key|
+        target = target.send target_accessor_key.to_sym
+      end
+      begin
+        target.send "\#{keys.last}=", v
+      rescue NoMethodError
+        raise "Attempted to configure property \\"\#{keys.last}\\" on Bundle but property does not exist."
+      end
+    end
+  end
+end
+CODE
+  end
+
+  def test_build_model_code_with_custom_initializer
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
+    element1 = Reality::Model::ModelElement.new(repository, :bundle, nil, :custom_initialize => true)
+
+    code = element1.send(:build_model_code)
+    assert_equal code, <<CODE
+class Bundle
+  attr_reader :name
+
+  def perform_init(name, options = {}, &block)
+    @name = name
+    Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition started."
+    self.options = options
+    yield self if block_given?
+    Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition completed."
+  end
+
+  public
+
+  def options=(options)
+    options.each_pair do |k, v|
+      keys = k.to_s.split('.')
+      target = self
+      keys[0, keys.length - 1].each do |target_accessor_key|
+        target = target.send target_accessor_key.to_sym
+      end
+      begin
+        target.send "\#{keys.last}=", v
+      rescue NoMethodError
+        raise "Attempted to configure property \\"\#{keys.last}\\" on Bundle but property does not exist."
+      end
+    end
+  end
+end
+CODE
+  end
+
+  module MyFacetManager
+  end
+
+  def test_build_model_code_that_is_faceted
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer, :facet_container => MyFacetManager)
+    element1 = Reality::Model::ModelElement.new(repository, :bundle, nil, {})
+
+    code = element1.send(:build_model_code)
+    assert_equal code, <<CODE
+class Bundle
+  attr_reader :name
+
+  def initialize(name, options = {}, &block)
+    @name = name
+    Reality::Model::TestModelElement::MyFacetManager.target_manager.apply_extension(self)
+    Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition started."
+    self.options = options
+    yield self if block_given?
+    Reality::Model::TestCase::MyContainer.info "Bundle '\#{name}' definition completed."
+  end
+
+  public
+
+  def options=(options)
+    options.each_pair do |k, v|
+      keys = k.to_s.split('.')
+      target = self
+      keys[0, keys.length - 1].each do |target_accessor_key|
+        target = target.send target_accessor_key.to_sym
+      end
+      begin
+        target.send "\#{keys.last}=", v
+      rescue NoMethodError
+        raise "Attempted to configure property \\"\#{keys.last}\\" on Bundle but property does not exist."
+      end
+    end
+  end
+end
+CODE
+  end
+
+  def test_build_model_code_for_containing_model
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
+    element0 = Reality::Model::ModelElement.new(repository, :project, nil, {})
+    Reality::Model::ModelElement.new(repository, :bundle, :project, {})
+
+    code = element0.send(:build_model_code)
+    assert_equal code, <<CODE
+class Project
+  attr_reader :name
+
+  def initialize(name, options = {}, &block)
+    @name = name
+    Reality::Model::TestCase::MyContainer.info "Project '\#{name}' definition started."
+    self.options = options
+    yield self if block_given?
+    Reality::Model::TestCase::MyContainer.info "Project '\#{name}' definition completed."
+  end
+
+  public
+
+  def bundle(name, options = {}, &block)
+    Bundle.new(name, options, &block)
+  end
+
+  def bundle_by_name?(name)
+    !!bundle_map[name.to_s]
+  end
+
+  def bundle_by_name(name)
+    bundle = bundle_map[name.to_s]
+    raise "No bundle with name '\#{name}' defined." unless bundle
+    bundle
+  end
+
+  def bundles
+    bundle_map.values
+  end
+
+  private
+
+  def register_bundle(bundle)
+    Reality::Model::TestCase::MyContainer.error("Attempting to register duplicate bundle definition with name '\#{name}'") if bundle_by_name?(bundle.name)
+    bundle_map[bundle.name.to_s] = bundle
+  end
+
+  def bundle_map
+    @bundle_map ||= Reality::OrderedHash.new
+  end
+
+  public
+
+  def options=(options)
+    options.each_pair do |k, v|
+      keys = k.to_s.split('.')
+      target = self
+      keys[0, keys.length - 1].each do |target_accessor_key|
+        target = target.send target_accessor_key.to_sym
+      end
+      begin
+        target.send "\#{keys.last}=", v
+      rescue NoMethodError
+        raise "Attempted to configure property \\"\#{keys.last}\\" on Project but property does not exist."
+      end
+    end
+  end
+end
+CODE
+  end
 end

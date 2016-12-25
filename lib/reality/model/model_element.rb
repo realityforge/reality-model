@@ -71,6 +71,69 @@ module Reality #nodoc
 
       private
 
+      def build_model_code
+        # @formatter:off
+        code = <<-RUBY
+class #{self.model_classname}
+  attr_reader :#{self.id_method}
+        RUBY
+        unless self.container_key.nil?
+          code += <<-RUBY
+  attr_reader :#{self.container_key}
+          RUBY
+        end
+        code += <<-RUBY
+
+  def #{self.custom_initialize? ? 'perform_init' : 'initialize'}(#{self.container_key.nil? ? '' : "#{self.container_key}, "}#{self.id_method}, options = {}, &block)
+    @#{self.id_method} = #{self.id_method}
+        RUBY
+        unless self.container_key.nil?
+          code += <<-RUBY
+    @#{self.container_key} = #{self.container_key}
+    @#{self.container_key}.send(:register_#{self.inverse_access_method}, self)
+          RUBY
+        end
+        if self.repository.faceted?
+          code += <<-RUBY
+    #{self.repository.facet_container}.target_manager.apply_extension(self)
+          RUBY
+        end
+        code += <<-RUBY
+    #{self.repository.log_container}.info "#{self.model_classname} '\#{#{self.id_method}}' definition started."
+    self.options = options
+    yield self if block_given?
+    #{self.repository.log_container}.info "#{self.model_classname} '\#{#{self.id_method}}' definition completed."
+  end
+        RUBY
+
+        repository.model_elements_by_container(self.key).each do |child|
+          code += build_child_accessor_code(child)
+        end
+
+        code += <<-RUBY
+
+  public
+
+  def options=(options)
+    options.each_pair do |k, v|
+      keys = k.to_s.split('.')
+      target = self
+      keys[0, keys.length - 1].each do |target_accessor_key|
+        target = target.send target_accessor_key.to_sym
+      end
+      begin
+        target.send "\#{keys.last}=", v
+      rescue NoMethodError
+        raise "Attempted to configure property \\"\#{keys.last}\\" on #{self.model_classname} but property does not exist."
+      end
+    end
+  end
+end
+        RUBY
+
+        code
+      end
+
       def build_child_accessor_code(child)
         # @formatter:off
         code = <<-RUBY
