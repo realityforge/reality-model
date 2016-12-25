@@ -68,6 +68,52 @@ module Reality #nodoc
       def qualified_key
         "#{repository.key}.#{self.key}"
       end
+
+      private
+
+      def build_child_accessor_code(child)
+        # @formatter:off
+        code = <<-RUBY
+
+  public
+
+        RUBY
+        unless child.custom_initialize?
+          code += <<-RUBY
+  def #{child.inverse_access_method}(#{child.id_method}, options = {}, &block)
+    #{child.model_classname}.new(#{child.id_method}, options, &block)
+  end
+
+          RUBY
+        end
+        code += <<-RUBY
+  def #{child.inverse_access_method}_by_#{child.id_method}?(#{child.id_method})
+    !!#{child.inverse_access_method}_map[#{child.id_method}.to_s]
+  end
+
+  def #{child.inverse_access_method}_by_#{child.id_method}(#{child.id_method})
+    #{child.inverse_access_method} = #{child.inverse_access_method}_map[#{child.id_method}.to_s]
+    raise "No #{child.key} with #{child.id_method} '\#{#{child.id_method}}' defined." unless #{child.inverse_access_method}
+    #{child.inverse_access_method}
+  end
+
+  def #{child.access_method}
+    #{child.inverse_access_method}_map.values
+  end
+
+  private
+
+  def register_#{child.inverse_access_method}(#{child.inverse_access_method})
+    #{child.repository.log_container}.error("Attempting to register duplicate #{child.inverse_access_method} definition with #{child.id_method} '\#{#{child.id_method}}'") if #{child.inverse_access_method}_by_#{child.id_method}?(#{child.inverse_access_method}.#{child.id_method})
+    #{child.inverse_access_method}_map[#{child.inverse_access_method}.#{child.id_method}.to_s] = #{child.inverse_access_method}
+  end
+
+  def #{child.inverse_access_method}_map
+    @#{child.inverse_access_method}_map ||= Reality::OrderedHash.new
+  end
+        RUBY
+        # @formatter:on
+      end
     end
   end
 end

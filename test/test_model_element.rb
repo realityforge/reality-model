@@ -95,4 +95,82 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
     assert_equal repository.model_element_by_key?(:bundle), true
     assert_equal repository.model_element_by_key?(:component), true
   end
+
+  def test_build_child_accessor_code
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
+    element1 = Reality::Model::ModelElement.new(repository, :bundle, nil, {})
+    element2 = Reality::Model::ModelElement.new(repository, :component, :bundle, {})
+
+    code = element1.send(:build_child_accessor_code, element2)
+    assert_equal code, <<CODE
+
+  public
+
+  def component(name, options = {}, &block)
+    Component.new(name, options, &block)
+  end
+
+  def component_by_name?(name)
+    !!component_map[name.to_s]
+  end
+
+  def component_by_name(name)
+    component = component_map[name.to_s]
+    raise "No component with name '\#{name}' defined." unless component
+    component
+  end
+
+  def components
+    component_map.values
+  end
+
+  private
+
+  def register_component(component)
+    Reality::Model::TestCase::MyContainer.error("Attempting to register duplicate component definition with name '\#{name}'") if component_by_name?(component.name)
+    component_map[component.name.to_s] = component
+  end
+
+  def component_map
+    @component_map ||= Reality::OrderedHash.new
+  end
+CODE
+  end
+
+  def test_build_child_accessor_code_with_custom_initializer
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
+    element1 = Reality::Model::ModelElement.new(repository, :bundle, nil, {})
+    element2 = Reality::Model::ModelElement.new(repository, :component, :bundle, :custom_initialize => true)
+
+    code = element1.send(:build_child_accessor_code, element2)
+    assert_equal code, <<CODE
+
+  public
+
+  def component_by_name?(name)
+    !!component_map[name.to_s]
+  end
+
+  def component_by_name(name)
+    component = component_map[name.to_s]
+    raise "No component with name '\#{name}' defined." unless component
+    component
+  end
+
+  def components
+    component_map.values
+  end
+
+  private
+
+  def register_component(component)
+    Reality::Model::TestCase::MyContainer.error("Attempting to register duplicate component definition with name '\#{name}'") if component_by_name?(component.name)
+    component_map[component.name.to_s] = component
+  end
+
+  def component_map
+    @component_map ||= Reality::OrderedHash.new
+  end
+CODE
+  end
 end
