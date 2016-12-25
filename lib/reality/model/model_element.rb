@@ -69,6 +69,10 @@ module Reality #nodoc
         "#{repository.key}.#{self.key}"
       end
 
+      def model
+        self.repository.model_container.const_get(self.model_classname)
+      end
+
       private
 
       def define_ruby_class(model_container)

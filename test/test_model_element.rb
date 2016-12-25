@@ -461,6 +461,9 @@ CODE
     assert_equal true, ResgenContainer2.const_defined?(:Prj)
     assert_equal true, ResgenContainer2.const_defined?(:Bundle)
 
+    assert_equal ResgenContainer2::Prj, model1.model
+    assert_equal ResgenContainer2::Bundle, model2.model
+
     assert_true ResgenContainer2::Prj.instance_methods.include?(:key)
     assert_false ResgenContainer2::Prj.instance_methods.include?(:name)
     assert_true ResgenContainer2::Prj.instance_methods.include?(:bnds)
