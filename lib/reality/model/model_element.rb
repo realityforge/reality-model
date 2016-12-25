@@ -24,7 +24,7 @@ module Reality #nodoc
 
         @custom_initialize = options[:custom_initialize].nil? ? false : !!options[:custom_initialize]
 
-        @id_method = (options[:id_method] || repository.id_method).to_sym
+        @id_method = (options[:id_method] || repository.default_id_method).to_sym
         @access_method = (options[:access_method] || Reality::Naming.pluralize(@key)).to_sym
         @inverse_access_method = (options[:inverse_access_method] || @key).to_sym
         @container_key = container_key.nil? ? nil : container_key.to_sym

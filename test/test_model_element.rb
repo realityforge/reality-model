@@ -18,7 +18,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
   end
 
   def test_default_value_of_id_method
-    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer, :id_method => :key)
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer, :default_id_method => :key)
     element = Reality::Model::ModelElement.new(repository, :entity, nil, {})
 
     assert_equal element.id_method, :key

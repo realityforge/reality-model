@@ -26,15 +26,15 @@ module Reality #nodoc
       attr_reader :facet_container
       # The default name of the method that used as the key or identity field for model. This can
       # be overriden at a model element level.
-      attr_reader :id_method
+      attr_reader :default_id_method
 
       def initialize(key, model_container, options = {})
         @key = key
         @model_container = model_container
         @log_container = options[:log_container] || model_container
         @facet_container = options[:facet_container]
-        @id_method = (options[:id_method] || :name).to_sym
         @faceted = options[:faceted].nil? ? false : !!options[:faceted]
+        @default_id_method = (options[:default_id_method] || :name).to_sym
         @locked = false
         if block_given?
           yield self
