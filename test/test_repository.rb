@@ -2,7 +2,7 @@ require File.expand_path('../helper', __FILE__)
 
 class Reality::Model::TestRepository < Reality::Model::TestCase
   def test_basic_operation
-    repository = Reality::Model::Repository.new(:MyTypeSystem)
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
 
     assert_equal repository.key, :MyTypeSystem
     assert_equal repository.model_element_keys, []
@@ -24,7 +24,7 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
   end
 
   def test_yield
-    repository = Reality::Model::Repository.new(:MyTypeSystem) do |repository|
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer) do |repository|
       repository.model_element(:entity)
     end
 
@@ -35,7 +35,7 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
   end
 
   def test_register_duplicates
-    repository = Reality::Model::Repository.new(:MyTypeSystem)
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
 
     repository.model_element(:entity)
 
@@ -47,7 +47,7 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
   end
 
   def test_model_elements_by_container
-    repository = Reality::Model::Repository.new(:MyTypeSystem)
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
 
     repository.model_element(:entity)
 
@@ -60,7 +60,7 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
   end
 
   def test_lock
-    repository = Reality::Model::Repository.new(:Domgen)
+    repository = Reality::Model::Repository.new(:Domgen, MyContainer)
 
     assert_equal repository.locked?, false
 

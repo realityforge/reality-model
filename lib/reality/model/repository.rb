@@ -18,9 +18,12 @@ module Reality #nodoc
     class Repository
       # A symbolic name for the system model
       attr_reader :key
+      # The ruby module in which all the model elements will be defined
+      attr_reader :model_container
 
-      def initialize(key)
+      def initialize(key, model_container)
         @key = key
+        @model_container = model_container
         @locked = false
         if block_given?
           yield self

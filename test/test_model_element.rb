@@ -2,7 +2,7 @@ require File.expand_path('../helper', __FILE__)
 
 class Reality::Model::TestModelElement < Reality::Model::TestCase
   def test_basic_operation
-    repository = Reality::Model::Repository.new(:MyTypeSystem)
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
     element = Reality::Model::ModelElement.new(repository, :entity, nil, {})
 
     assert_equal element.repository, repository
@@ -16,7 +16,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
   end
 
   def test_yield
-    repository = Reality::Model::Repository.new(:MyTypeSystem)
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
     Reality::Model::ModelElement.new(repository, :entity, nil, {}) do |element|
 
       assert_equal element.repository, repository
@@ -32,7 +32,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
   end
 
   def test_basic_operation_with_no_defaults
-    repository = Reality::Model::Repository.new(:MyTypeSystem)
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
     element = Reality::Model::ModelElement.new(repository, :entity, nil, :model_classname => :MyEntity, :access_method => :ents, :inverse_access_method => :ent)
 
     assert_equal element.repository, repository
@@ -49,18 +49,18 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
 
   def test_bad_key
     assert_model_error("Model Element 'MyTypeSystem.Entity' has a key 'Entity' that does not use the underscore naming pattern (i.e. The key should be 'entity').") do
-      Reality::Model::ModelElement.new(Reality::Model::Repository.new(:MyTypeSystem), :Entity, nil, {})
+      Reality::Model::ModelElement.new(Reality::Model::Repository.new(:MyTypeSystem, MyContainer), :Entity, nil, {})
     end
   end
 
   def test_bad_container_key
     assert_model_error("Model Element 'MyTypeSystem.component' defines container as 'bundle' but no such model element exists.") do
-      Reality::Model::ModelElement.new(Reality::Model::Repository.new(:MyTypeSystem), :component, :bundle, {})
+      Reality::Model::ModelElement.new(Reality::Model::Repository.new(:MyTypeSystem, MyContainer), :component, :bundle, {})
     end
   end
 
   def test_container_key
-    repository = Reality::Model::Repository.new(:MyTypeSystem)
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
     element1 = Reality::Model::ModelElement.new(repository, :bundle, nil, {})
     element2 = Reality::Model::ModelElement.new(repository, :component, :bundle, {})
 
