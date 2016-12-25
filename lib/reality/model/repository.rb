@@ -24,6 +24,8 @@ module Reality #nodoc
       attr_reader :log_container
       # The ruby module where the facet manager is defined if any. This will be nil if faceted? returns false.
       attr_reader :facet_container
+      # The ruby module in which all the top level instances will be stored.
+      attr_reader :instance_container
       # The default name of the method that used as the key or identity field for model. This can
       # be overriden at a model element level.
       attr_reader :default_id_method
@@ -33,6 +35,7 @@ module Reality #nodoc
         @model_container = model_container
         @log_container = options[:log_container] || model_container
         @facet_container = options[:facet_container]
+        @instance_container = options[:instance_container] || model_container
         @default_id_method = (options[:default_id_method] || :name).to_sym
         @locked = false
         if block_given?
@@ -76,6 +79,7 @@ module Reality #nodoc
         Reality::Model.error("Attempting to lock repository '#{key}' when repository is already locked.") if locked?
         @locked = true
         define_ruby_classes
+        define_top_level_instance_accessors
       end
 
       def locked?
@@ -83,6 +87,14 @@ module Reality #nodoc
       end
 
       private
+
+      def define_top_level_instance_accessors
+        unless self.instance_container.nil?
+          self.model_elements.select{|model_element| model_element.container_key.nil?}.each do |model_element|
+            self.instance_container.instance_eval(model_element.send(:build_child_accessor_code, model_element))
+          end
+        end
+      end
 
       def define_ruby_classes
         self.model_elements.each do |model_element|

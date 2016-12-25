@@ -6,6 +6,7 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
 
     assert_equal repository.key, :MyTypeSystem
     assert_equal repository.model_container, MyContainer
+    assert_equal repository.instance_container, MyContainer
     assert_equal repository.log_container, MyContainer
     assert_equal repository.facet_container, nil
     assert_equal repository.faceted?, false
@@ -33,14 +34,19 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
   module MyFacetContainer
   end
 
+  module MyInstanceContainer
+  end
+
   def test_create_no_defaults
     repository = Reality::Model::Repository.new(:MyTypeSystem,
                                                 MyContainer,
+                                                :instance_container => MyInstanceContainer,
                                                 :log_container => MyLogContainer,
                                                 :facet_container => MyFacetContainer)
 
     assert_equal repository.key, :MyTypeSystem
     assert_equal repository.model_container, MyContainer
+    assert_equal repository.instance_container, MyInstanceContainer
     assert_equal repository.log_container, MyLogContainer
     assert_equal repository.facet_container, MyFacetContainer
     assert_equal repository.faceted?, true
@@ -125,11 +131,14 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
     assert_equal true, MyContainer.const_defined?(:Bundle)
   end
 
+  module MyInstanceContainer2
+  end
+
   def test_lock_called_if_block_supplied_to_constructor
     assert_equal false, MyContainer.const_defined?(:Project)
     assert_equal false, MyContainer.const_defined?(:Bundle)
 
-    repository = Reality::Model::Repository.new(:Resgen, MyContainer) do |r|
+    repository = Reality::Model::Repository.new(:Resgen, MyContainer, :instance_container => MyInstanceContainer2) do |r|
       r.model_element(:project)
       r.model_element(:bundle, :project)
     end
@@ -138,5 +147,31 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
 
     assert_equal true, MyContainer.const_defined?(:Project)
     assert_equal true, MyContainer.const_defined?(:Bundle)
+
+    assert_true MyInstanceContainer2.public_methods.include?(:projects)
+    assert_true MyInstanceContainer2.public_methods.include?(:project_by_name)
+    assert_true MyInstanceContainer2.public_methods.include?(:project_by_name?)
+    assert_true MyInstanceContainer2.public_methods.include?(:project)
+  end
+
+  module MyInstanceContainer3
+  end
+
+  def test_define_top_level_instance_accessors
+
+    assert_false MyInstanceContainer3.public_methods.include?(:projects)
+    assert_false MyInstanceContainer3.public_methods.include?(:project_by_name)
+    assert_false MyInstanceContainer3.public_methods.include?(:project_by_name?)
+    assert_false MyInstanceContainer3.public_methods.include?(:project)
+
+    repository = Reality::Model::Repository.new(:Resgen, MyContainer, :instance_container => MyInstanceContainer3)
+    Reality::Model::ModelElement.new(repository, :project, nil, {})
+
+    repository.send(:define_top_level_instance_accessors)
+
+    assert_true MyInstanceContainer3.public_methods.include?(:projects)
+    assert_true MyInstanceContainer3.public_methods.include?(:project_by_name)
+    assert_true MyInstanceContainer3.public_methods.include?(:project_by_name?)
+    assert_true MyInstanceContainer3.public_methods.include?(:project)
   end
 end
