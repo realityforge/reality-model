@@ -124,4 +124,19 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
     assert_equal true, MyContainer.const_defined?(:Project)
     assert_equal true, MyContainer.const_defined?(:Bundle)
   end
+
+  def test_lock_called_if_block_supplied_to_constructor
+    assert_equal false, MyContainer.const_defined?(:Project)
+    assert_equal false, MyContainer.const_defined?(:Bundle)
+
+    repository = Reality::Model::Repository.new(:Resgen, MyContainer) do |r|
+      r.model_element(:project)
+      r.model_element(:bundle, :project)
+    end
+
+    assert_equal true, repository.locked?
+
+    assert_equal true, MyContainer.const_defined?(:Project)
+    assert_equal true, MyContainer.const_defined?(:Bundle)
+  end
 end
