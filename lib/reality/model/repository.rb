@@ -76,6 +76,7 @@ module Reality #nodoc
       def lock!
         Reality::Model.error("Attempting to lock repository '#{key}' when repository is already locked.") if locked?
         @locked = true
+        define_ruby_classes
       end
 
       def locked?
@@ -83,6 +84,12 @@ module Reality #nodoc
       end
 
       private
+
+      def define_ruby_classes
+        self.model_elements.each do |model_element|
+          model_element.send(:define_ruby_class, self.model_container)
+        end
+      end
 
       def register_model_element(model_element)
         Reality::Model.error("Attempting to define model element '#{model_element.qualified_key}' when repository is locked.") if locked?

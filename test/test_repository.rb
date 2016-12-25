@@ -92,7 +92,13 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
 
     assert_equal repository.model_elements.size, 2
 
+    assert_equal false, MyContainer.const_defined?(:Entity)
+    assert_equal false, MyContainer.const_defined?(:Attribute)
+
     repository.lock!
+
+    assert_equal true, MyContainer.const_defined?(:Entity)
+    assert_equal true, MyContainer.const_defined?(:Attribute)
 
     assert_equal repository.locked?, true
 
@@ -103,5 +109,19 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
     assert_model_error("Attempting to lock repository 'Domgen' when repository is already locked.") do
       repository.lock!
     end
+  end
+
+  def test_define_ruby_classes
+    repository = Reality::Model::Repository.new(:Resgen, MyContainer)
+    Reality::Model::ModelElement.new(repository, :project, nil, {})
+    Reality::Model::ModelElement.new(repository, :bundle, :project, {})
+
+    assert_equal false, MyContainer.const_defined?(:Project)
+    assert_equal false, MyContainer.const_defined?(:Bundle)
+
+    repository.send(:define_ruby_classes)
+
+    assert_equal true, MyContainer.const_defined?(:Project)
+    assert_equal true, MyContainer.const_defined?(:Bundle)
   end
 end
