@@ -71,26 +71,31 @@ module Reality #nodoc
 
       private
 
+      def define_ruby_class(model_container)
+        model_container.class_eval(build_model_code)
+      end
+
       def build_model_code
         # @formatter:off
         code = <<-RUBY
 class #{self.model_classname}
   attr_reader :#{self.id_method}
         RUBY
+        container = self.container_key.nil? ? nil : self.repository.model_element_by_key(self.container_key)
         unless self.container_key.nil?
           code += <<-RUBY
-  attr_reader :#{self.container_key}
+  attr_reader :#{container.inverse_access_method}
           RUBY
         end
         code += <<-RUBY
 
-  def #{self.custom_initialize? ? 'perform_init' : 'initialize'}(#{self.container_key.nil? ? '' : "#{self.container_key}, "}#{self.id_method}, options = {}, &block)
+  def #{self.custom_initialize? ? 'perform_init' : 'initialize'}(#{self.container_key.nil? ? '' : "#{container.inverse_access_method}, "}#{self.id_method}, options = {}, &block)
     @#{self.id_method} = #{self.id_method}
         RUBY
         unless self.container_key.nil?
           code += <<-RUBY
-    @#{self.container_key} = #{self.container_key}
-    @#{self.container_key}.send(:register_#{self.inverse_access_method}, self)
+    @#{container.inverse_access_method} = #{container.inverse_access_method}
+    @#{container.inverse_access_method}.send(:register_#{self.inverse_access_method}, self)
           RUBY
         end
         if self.repository.faceted?

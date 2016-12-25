@@ -398,4 +398,73 @@ class Project
 end
 CODE
   end
+
+  module ResgenContainer
+  end
+
+  def test_define_ruby_class
+    repository = Reality::Model::Repository.new(:Resgen, ResgenContainer)
+    model1 = Reality::Model::ModelElement.new(repository, :project, nil, {})
+    model2 = Reality::Model::ModelElement.new(repository, :bundle, :project, {})
+
+    assert_equal false, ResgenContainer.const_defined?(:Project)
+    assert_equal false, ResgenContainer.const_defined?(:Bundle)
+
+    model1.send(:define_ruby_class, ResgenContainer)
+
+    assert_equal true, ResgenContainer.const_defined?(:Project)
+    assert_equal false, ResgenContainer.const_defined?(:Bundle)
+
+    model2.send(:define_ruby_class, ResgenContainer)
+
+    assert_equal true, ResgenContainer.const_defined?(:Project)
+    assert_equal true, ResgenContainer.const_defined?(:Bundle)
+
+    assert_true ResgenContainer::Project.instance_methods.include?(:name)
+    assert_true ResgenContainer::Project.instance_methods.include?(:bundles)
+    assert_true ResgenContainer::Project.instance_methods.include?(:bundle_by_name)
+    assert_true ResgenContainer::Project.instance_methods.include?(:bundle_by_name?)
+    assert_true ResgenContainer::Project.instance_methods.include?(:bundle)
+    assert_false ResgenContainer::Project.instance_methods.include?(:perform_init)
+
+    assert_true ResgenContainer::Bundle.instance_methods.include?(:project)
+    assert_true ResgenContainer::Bundle.instance_methods.include?(:name)
+    assert_false ResgenContainer::Bundle.instance_methods.include?(:perform_init)
+  end
+
+  module ResgenContainer2
+  end
+
+  def test_define_ruby_class_with_heavy_customization
+    repository = Reality::Model::Repository.new(:Resgen, ResgenContainer)
+    model1 = Reality::Model::ModelElement.new(repository, :project, nil, :custom_initialize => true, :model_classname => :Prj, :inverse_access_method => :prj, :id_method => :key)
+    model2 = Reality::Model::ModelElement.new(repository, :bundle, :project, :custom_initialize => true, :inverse_access_method => :bnd, :access_method => :bnds, :id_method => :key)
+
+    assert_equal false, ResgenContainer2.const_defined?(:Prj)
+    assert_equal false, ResgenContainer2.const_defined?(:Bundle)
+
+    model1.send(:define_ruby_class, ResgenContainer2)
+
+    assert_equal true, ResgenContainer2.const_defined?(:Prj)
+    assert_equal false, ResgenContainer2.const_defined?(:Bundle)
+
+    model2.send(:define_ruby_class, ResgenContainer2)
+
+    assert_equal true, ResgenContainer2.const_defined?(:Prj)
+    assert_equal true, ResgenContainer2.const_defined?(:Bundle)
+
+    assert_true ResgenContainer2::Prj.instance_methods.include?(:key)
+    assert_false ResgenContainer2::Prj.instance_methods.include?(:name)
+    assert_true ResgenContainer2::Prj.instance_methods.include?(:bnds)
+    assert_true ResgenContainer2::Prj.instance_methods.include?(:bnd_by_key)
+    assert_true ResgenContainer2::Prj.instance_methods.include?(:bnd_by_key?)
+
+    # Need a custom initializer to be written
+    assert_false ResgenContainer2::Prj.instance_methods.include?(:bundle)
+    assert_false ResgenContainer2::Prj.instance_methods.include?(:bnd)
+
+    assert_true ResgenContainer2::Bundle.instance_methods.include?(:prj)
+    assert_true ResgenContainer2::Bundle.instance_methods.include?(:key)
+    assert_false ResgenContainer2::Bundle.instance_methods.include?(:name)
+  end
 end
