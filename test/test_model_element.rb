@@ -33,7 +33,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
 
   def test_basic_operation_with_no_defaults
     repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
-    element = Reality::Model::ModelElement.new(repository, :entity, nil, :model_classname => :MyEntity, :access_method => :ents, :inverse_access_method => :ent)
+    element = Reality::Model::ModelElement.new(repository, :entity, nil, :model_classname => :MyEntity, :access_method => :ents, :inverse_access_method => :ent, :id_method => :key)
 
     assert_equal element.repository, repository
     assert_equal element.key, :entity
