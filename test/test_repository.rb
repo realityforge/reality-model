@@ -5,6 +5,7 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
     repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
 
     assert_equal repository.key, :MyTypeSystem
+    assert_equal repository.model_container, MyContainer
     assert_equal repository.model_element_keys, []
     assert_equal repository.model_elements, []
     assert_equal repository.model_elements_by_container(:entity), []
