@@ -18,7 +18,7 @@ module Reality #nodoc
     class Repository
       # A symbolic name for the system model
       attr_reader :key
-      # The ruby module in which all the model elements will be defined
+      # The ruby module in which all the model classes will be defined
       attr_reader :model_container
       # The ruby module where the log methods are defined
       attr_reader :log_container
