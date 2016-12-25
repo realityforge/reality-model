@@ -22,6 +22,8 @@ module Reality #nodoc
       attr_reader :model_container
       # The ruby module where the log methods are defined
       attr_reader :log_container
+      # The ruby module where the facet manager is defined if any. This will be nil if faceted? returns false.
+      attr_reader :facet_container
       # The default name of the method that used as the key or identity field for model. This can
       # be overriden at a model element level.
       attr_reader :id_method
@@ -30,12 +32,18 @@ module Reality #nodoc
         @key = key
         @model_container = model_container
         @log_container = options[:log_container] || model_container
+        @facet_container = options[:facet_container]
         @id_method = (options[:id_method] || :name).to_sym
+        @faceted = options[:faceted].nil? ? false : !!options[:faceted]
         @locked = false
         if block_given?
           yield self
           lock!
         end
+      end
+
+      def faceted?
+        !@facet_container.nil?
       end
 
       def model_element_keys

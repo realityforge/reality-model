@@ -7,6 +7,8 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
     assert_equal repository.key, :MyTypeSystem
     assert_equal repository.model_container, MyContainer
     assert_equal repository.log_container, MyContainer
+    assert_equal repository.facet_container, nil
+    assert_equal repository.faceted?, false
     assert_equal repository.model_element_keys, []
     assert_equal repository.model_elements, []
     assert_equal repository.model_elements_by_container(:entity), []
@@ -25,14 +27,23 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
     assert_equal repository.model_elements_by_container(:entity), []
   end
 
+  module MyLogContainer
+  end
+
+  module MyFacetContainer
+  end
+
   def test_create_no_defaults
     repository = Reality::Model::Repository.new(:MyTypeSystem,
                                                 MyContainer,
-                                                :log_container => Reality::Model::TestRepository)
+                                                :log_container => MyLogContainer,
+                                                :facet_container => MyFacetContainer)
 
     assert_equal repository.key, :MyTypeSystem
     assert_equal repository.model_container, MyContainer
-    assert_equal repository.log_container, Reality::Model::TestRepository
+    assert_equal repository.log_container, MyLogContainer
+    assert_equal repository.facet_container, MyFacetContainer
+    assert_equal repository.faceted?, true
   end
 
   def test_yield
