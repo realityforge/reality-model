@@ -27,8 +27,19 @@ module Reality #nodoc
         @inverse_access_method = (options[:inverse_access_method] || @key).to_sym
         @container_key = container_key.nil? ? nil : container_key.to_sym
 
-        unless Reality::Naming.underscore?(@key)
-          Reality::Model.error("Model Element '#{qualified_key}' has a key '#{key}' that does not use the underscore naming pattern (i.e. The key should be '#{Reality::Naming.underscore(@key)}').")
+        {
+          :key => @key,
+          :id_method => @id_method,
+          :access_method => @access_method,
+          :inverse_access_method => @inverse_access_method,
+        }.each_pair do |attribute_name, value|
+          unless Reality::Naming.underscore?(value)
+            Reality::Model.error("Model Element '#{qualified_key}' has a #{attribute_name} '#{value}' that does not use the underscore naming pattern (i.e. The #{attribute_name} should be '#{Reality::Naming.underscore(value)}').")
+          end
+        end
+
+        unless Reality::Naming.pascal_case?(@model_classname)
+          Reality::Model.error("Model Element '#{qualified_key}' has a model_classname '#{@model_classname}' that does not use the pascal case naming pattern (i.e. The model_classname should be '#{Reality::Naming.pascal_case(@model_classname)}').")
         end
 
         if @container_key && !repository.model_element_by_key?(@container_key)

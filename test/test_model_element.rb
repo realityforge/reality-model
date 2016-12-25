@@ -47,9 +47,21 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
     assert_equal repository.model_element_by_key?(:entity), true
   end
 
-  def test_bad_key
+  def test_bad_attributes
     assert_model_error("Model Element 'MyTypeSystem.Entity' has a key 'Entity' that does not use the underscore naming pattern (i.e. The key should be 'entity').") do
       Reality::Model::ModelElement.new(Reality::Model::Repository.new(:MyTypeSystem, MyContainer), :Entity, nil, {})
+    end
+    assert_model_error("Model Element 'MyTypeSystem.entity' has a model_classname 'entity' that does not use the pascal case naming pattern (i.e. The model_classname should be 'Entity').") do
+      Reality::Model::ModelElement.new(Reality::Model::Repository.new(:MyTypeSystem, MyContainer), :entity, nil, :model_classname => 'entity')
+    end
+    assert_model_error("Model Element 'MyTypeSystem.entity' has a access_method 'Entity' that does not use the underscore naming pattern (i.e. The access_method should be 'entity').") do
+      Reality::Model::ModelElement.new(Reality::Model::Repository.new(:MyTypeSystem, MyContainer), :entity, nil, :access_method => 'Entity')
+    end
+    assert_model_error("Model Element 'MyTypeSystem.entity' has a inverse_access_method 'Entity' that does not use the underscore naming pattern (i.e. The inverse_access_method should be 'entity').") do
+      Reality::Model::ModelElement.new(Reality::Model::Repository.new(:MyTypeSystem, MyContainer), :entity, nil, :inverse_access_method => 'Entity')
+    end
+    assert_model_error("Model Element 'MyTypeSystem.entity' has a id_method 'Name' that does not use the underscore naming pattern (i.e. The id_method should be 'name').") do
+      Reality::Model::ModelElement.new(Reality::Model::Repository.new(:MyTypeSystem, MyContainer), :entity, nil, :id_method => 'Name')
     end
   end
 
