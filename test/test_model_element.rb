@@ -124,6 +124,10 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
     component_map.values
   end
 
+  def components?
+    !component_map.empty?
+  end
+
   private
 
   def register_component(component)
@@ -159,6 +163,10 @@ CODE
 
   def components
     component_map.values
+  end
+
+  def components?
+    !component_map.empty?
   end
 
   private

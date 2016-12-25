@@ -169,6 +169,10 @@ end
     #{child.inverse_access_method}_map.values
   end
 
+  def #{child.access_method}?
+    !#{child.inverse_access_method}_map.empty?
+  end
+
   private
 
   def register_#{child.inverse_access_method}(#{child.inverse_access_method})
