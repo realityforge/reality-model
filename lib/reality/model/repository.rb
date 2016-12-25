@@ -33,7 +33,6 @@ module Reality #nodoc
         @model_container = model_container
         @log_container = options[:log_container] || model_container
         @facet_container = options[:facet_container]
-        @faceted = options[:faceted].nil? ? false : !!options[:faceted]
         @default_id_method = (options[:default_id_method] || :name).to_sym
         @locked = false
         if block_given?
