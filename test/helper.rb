@@ -3,6 +3,7 @@ $:.unshift File.expand_path('../../lib', __FILE__)
 require 'minitest/autorun'
 require 'test/unit/assertions'
 require 'reality/model'
+require 'reality/facets'
 
 class Reality::Model::TestCase < Minitest::Test
   include Test::Unit::Assertions

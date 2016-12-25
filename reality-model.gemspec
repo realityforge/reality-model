@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'reality-naming', '>= 1.6.0'
   s.add_dependency 'reality-orderedhash', '>= 1.0.0'
 
+  s.add_development_dependency 'reality-facets', '>= 1.3.0'
   s.add_development_dependency(%q<minitest>, ['= 5.9.1'])
   s.add_development_dependency(%q<test-unit>, ['= 3.1.5'])
 end

@@ -174,4 +174,42 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
     assert_true MyInstanceContainer3.public_methods.include?(:project_by_name?)
     assert_true MyInstanceContainer3.public_methods.include?(:project)
   end
+
+  module MyFacetManager
+    extend Reality::Facets::FacetContainer
+  end
+
+  def test_define_facet_targets
+    assert_equal MyFacetManager.target_manager.target_keys, []
+
+    Reality::Model::Repository.new(:Resgen, MyContainer, :facet_container => MyFacetManager) do |r|
+      r.model_element(:project)
+      r.model_element(:bundle, :project, :inverse_access_method => :bnd, :access_method => :bnds)
+      r.model_element(:image, :bundle)
+    end
+
+    assert_equal MyFacetManager.target_manager.target_keys, [:project, :bundle, :image]
+
+    target1 = MyFacetManager.target_manager.target_by_key(:project)
+    target2 = MyFacetManager.target_manager.target_by_key(:bundle)
+    target3 = MyFacetManager.target_manager.target_by_key(:image)
+
+    assert_equal :project, target1.inverse_access_method
+    assert_equal :projects, target1.access_method
+    assert_equal nil, target1.container_key
+    assert_equal :project, target1.key
+    assert_equal Reality::Model::TestCase::MyContainer::Project, target1.model_class
+
+    assert_equal :bnd, target2.inverse_access_method
+    assert_equal :bnds, target2.access_method
+    assert_equal :project, target2.container_key
+    assert_equal :bundle, target2.key
+    assert_equal Reality::Model::TestCase::MyContainer::Bundle, target2.model_class
+
+    assert_equal :image, target3.inverse_access_method
+    assert_equal :images, target3.access_method
+    assert_equal :bundle, target3.container_key
+    assert_equal :image, target3.key
+    assert_equal Reality::Model::TestCase::MyContainer::Image, target3.model_class
+  end
 end

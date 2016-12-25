@@ -79,6 +79,7 @@ module Reality #nodoc
         Reality::Model.error("Attempting to lock repository '#{key}' when repository is already locked.") if locked?
         @locked = true
         define_ruby_classes
+        define_facet_targets
         define_top_level_instance_accessors
       end
 
@@ -99,6 +100,18 @@ module Reality #nodoc
       def define_ruby_classes
         self.model_elements.each do |model_element|
           model_element.send(:define_ruby_class, self.model_container)
+        end
+      end
+
+      def define_facet_targets
+        if self.faceted?
+          self.model_elements.each do |model_element|
+            self.facet_container.target_manager.target(model_element.model,
+                                                       model_element.key,
+                                                       model_element.container_key,
+                                                       :access_method => model_element.access_method,
+                                                       :inverse_access_method => model_element.inverse_access_method)
+          end
         end
       end
 
