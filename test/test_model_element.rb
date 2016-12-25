@@ -361,6 +361,7 @@ class Project
 
   def initialize(name, options = {}, &block)
     @name = name
+    Reality::Model::TestCase::MyContainer.send(:register_project, self)
     Reality::Model::TestCase::MyContainer.info "Project '\#{name}' definition started."
     pre_init if respond_to?(:pre_init, true)
     self.options = options
@@ -372,7 +373,7 @@ class Project
   public
 
   def bundle(name, options = {}, &block)
-    Bundle.new(name, options, &block)
+    Reality::Model::TestCase::MyContainer::Bundle.new(name, options, &block)
   end
 
   def bundle_by_name?(name)
@@ -387,6 +388,10 @@ class Project
 
   def bundles
     bundle_map.values
+  end
+
+  def bundles?
+    !bundle_map.empty?
   end
 
   private
