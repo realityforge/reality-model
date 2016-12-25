@@ -47,8 +47,8 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
   end
 
   def test_yield
-    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer) do |repository|
-      repository.model_element(:entity)
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer) do |repo|
+      repo.model_element(:entity)
     end
 
     assert_equal repository.locked?, true
