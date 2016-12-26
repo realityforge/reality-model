@@ -18,6 +18,7 @@ module Reality #nodoc
     # A descriptor describing a base type in the system model.
     class ModelElement
       def initialize(repository, key, container_key, options)
+        Reality::Options.check(options, [:model_classname, :custom_initialize, :id_method, :access_method, :inverse_access_method], Reality::Model, 'create model element')
         @repository = repository
         @key = key.to_sym
         @model_classname = (options[:model_classname] || Reality::Naming.pascal_case(key)).to_sym

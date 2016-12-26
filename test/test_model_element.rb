@@ -17,6 +17,19 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
     assert_equal repository.model_element_by_key?(:entity), true
   end
 
+  def test_validate_options
+    repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer)
+
+    assert_model_error("Unknown option ':x' passed to create model element") do
+      Reality::Model::ModelElement.new(repository, :entity, nil, :x => 1)
+    end
+
+    assert_model_error('Unknown options [:x, :z] passed to create model element') do
+      Reality::Model::ModelElement.new(repository, :entity, nil, :x => 1, :z => 1)
+    end
+  end
+
+
   def test_default_value_of_id_method
     repository = Reality::Model::Repository.new(:MyTypeSystem, MyContainer, :default_id_method => :key)
     element = Reality::Model::ModelElement.new(repository, :entity, nil, {})

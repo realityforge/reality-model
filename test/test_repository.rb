@@ -28,6 +28,16 @@ class Reality::Model::TestRepository < Reality::Model::TestCase
     assert_equal repository.model_elements_by_container(:entity), []
   end
 
+  def test_validate_options
+    assert_model_error("Unknown option ':x' passed to create repository") do
+      Reality::Model::Repository.new(:MyTypeSystem, MyContainer, :x => 1)
+    end
+
+    assert_model_error('Unknown options [:x, :z] passed to create repository') do
+      Reality::Model::Repository.new(:MyTypeSystem, MyContainer, :x => 1, :z => 1)
+    end
+  end
+
   module MyLogContainer
   end
 

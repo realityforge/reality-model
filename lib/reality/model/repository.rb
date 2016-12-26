@@ -31,6 +31,8 @@ module Reality #nodoc
       attr_reader :default_id_method
 
       def initialize(key, model_container, options = {})
+        Reality::Options.check(options, [:log_container, :facet_container, :instance_container, :default_id_method], Reality::Model, 'create repository')
+
         @key = key
         @model_container = model_container
         @log_container = options[:log_container] || model_container
