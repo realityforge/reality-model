@@ -225,6 +225,10 @@ class Bundle
 
   public
 
+  def <=>(other)
+    self.name <=> other.name
+  end
+
   def options=(options)
     options.each_pair do |k, v|
       keys = k.to_s.split('.')
@@ -268,6 +272,10 @@ class Bundle
 
   public
 
+  def <=>(other)
+    self.name <=> other.name
+  end
+
   def options=(options)
     options.each_pair do |k, v|
       keys = k.to_s.split('.')
@@ -307,6 +315,10 @@ class Bundle
   end
 
   public
+
+  def <=>(other)
+    self.name <=> other.name
+  end
 
   def options=(options)
     options.each_pair do |k, v|
@@ -351,6 +363,10 @@ class Bundle
   end
 
   public
+
+  def <=>(other)
+    self.name <=> other.name
+  end
 
   def options=(options)
     options.each_pair do |k, v|
@@ -432,6 +448,10 @@ class Project
 
   public
 
+  def <=>(other)
+    self.name <=> other.name
+  end
+
   def options=(options)
     options.each_pair do |k, v|
       keys = k.to_s.split('.')
@@ -471,6 +491,7 @@ CODE
     assert_equal true, ResgenContainer.const_defined?(:Project)
     assert_equal true, ResgenContainer.const_defined?(:Bundle)
 
+    assert_true ResgenContainer::Project.instance_methods.include?(:<=>)
     assert_true ResgenContainer::Project.instance_methods.include?(:name)
     assert_true ResgenContainer::Project.instance_methods.include?(:bundles)
     assert_true ResgenContainer::Project.instance_methods.include?(:bundle_names)
@@ -479,6 +500,7 @@ CODE
     assert_true ResgenContainer::Project.instance_methods.include?(:bundle)
     assert_false ResgenContainer::Project.instance_methods.include?(:perform_init)
 
+    assert_true ResgenContainer::Bundle.instance_methods.include?(:<=>)
     assert_true ResgenContainer::Bundle.instance_methods.include?(:project)
     assert_true ResgenContainer::Bundle.instance_methods.include?(:name)
     assert_false ResgenContainer::Bundle.instance_methods.include?(:perform_init)
@@ -508,6 +530,7 @@ CODE
     assert_equal ResgenContainer2::Prj, model1.model
     assert_equal ResgenContainer2::Bundle, model2.model
 
+    assert_true ResgenContainer2::Prj.instance_methods.include?(:<=>)
     assert_true ResgenContainer2::Prj.instance_methods.include?(:key)
     assert_false ResgenContainer2::Prj.instance_methods.include?(:name)
     assert_true ResgenContainer2::Prj.instance_methods.include?(:bnds)
@@ -519,6 +542,7 @@ CODE
     assert_false ResgenContainer2::Prj.instance_methods.include?(:bundle)
     assert_false ResgenContainer2::Prj.instance_methods.include?(:bnd)
 
+    assert_true ResgenContainer2::Bundle.instance_methods.include?(:<=>)
     assert_true ResgenContainer2::Bundle.instance_methods.include?(:prj)
     assert_true ResgenContainer2::Bundle.instance_methods.include?(:key)
     assert_false ResgenContainer2::Bundle.instance_methods.include?(:name)

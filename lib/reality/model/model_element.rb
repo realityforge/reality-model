@@ -130,6 +130,10 @@ class #{self.model_classname}
 
   public
 
+  def <=>(other)
+    self.#{self.id_method} <=> other.#{self.id_method}
+  end
+
   def options=(options)
     options.each_pair do |k, v|
       keys = k.to_s.split('.')
