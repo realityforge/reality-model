@@ -138,7 +138,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
   end
 
   def component_names
-    !component_map.keys
+    component_map.keys
   end
 
   def components?
@@ -183,7 +183,7 @@ CODE
   end
 
   def component_names
-    !component_map.keys
+    component_map.keys
   end
 
   def components?
@@ -428,7 +428,7 @@ class Project
   end
 
   def bundle_names
-    !bundle_map.keys
+    bundle_map.keys
   end
 
   def bundles?

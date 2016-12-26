@@ -185,7 +185,7 @@ end
   end
 
   def #{child.inverse_access_method}_#{Reality::Naming.pluralize(child.id_method)}
-    !#{child.inverse_access_method}_map.keys
+    #{child.inverse_access_method}_map.keys
   end
 
   def #{child.access_method}?
