@@ -137,6 +137,10 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
     component_map.values
   end
 
+  def component_names
+    !component_map.keys
+  end
+
   def components?
     !component_map.empty?
   end
@@ -176,6 +180,10 @@ CODE
 
   def components
     component_map.values
+  end
+
+  def component_names
+    !component_map.keys
   end
 
   def components?
@@ -403,6 +411,10 @@ class Project
     bundle_map.values
   end
 
+  def bundle_names
+    !bundle_map.keys
+  end
+
   def bundles?
     !bundle_map.empty?
   end
@@ -461,6 +473,7 @@ CODE
 
     assert_true ResgenContainer::Project.instance_methods.include?(:name)
     assert_true ResgenContainer::Project.instance_methods.include?(:bundles)
+    assert_true ResgenContainer::Project.instance_methods.include?(:bundle_names)
     assert_true ResgenContainer::Project.instance_methods.include?(:bundle_by_name)
     assert_true ResgenContainer::Project.instance_methods.include?(:bundle_by_name?)
     assert_true ResgenContainer::Project.instance_methods.include?(:bundle)
@@ -498,6 +511,7 @@ CODE
     assert_true ResgenContainer2::Prj.instance_methods.include?(:key)
     assert_false ResgenContainer2::Prj.instance_methods.include?(:name)
     assert_true ResgenContainer2::Prj.instance_methods.include?(:bnds)
+    assert_true ResgenContainer2::Prj.instance_methods.include?(:bnd_keys)
     assert_true ResgenContainer2::Prj.instance_methods.include?(:bnd_by_key)
     assert_true ResgenContainer2::Prj.instance_methods.include?(:bnd_by_key?)
 
