@@ -120,7 +120,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
   public
 
   def component(name, options = {}, &block)
-    Reality::Model::TestCase::MyContainer::Component.new(name, options, &block)
+    Reality::Model::TestCase::MyContainer::Component.new(self, name, options, &block)
   end
 
   def component_by_name?(name)
@@ -386,7 +386,7 @@ class Project
   public
 
   def bundle(name, options = {}, &block)
-    Reality::Model::TestCase::MyContainer::Bundle.new(name, options, &block)
+    Reality::Model::TestCase::MyContainer::Bundle.new(self, name, options, &block)
   end
 
   def bundle_by_name?(name)

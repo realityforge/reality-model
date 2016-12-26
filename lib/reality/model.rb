@@ -15,6 +15,7 @@
 require 'reality/logging'
 require 'reality/naming'
 require 'reality/options'
+require 'reality/orderedhash'
 
 require 'reality/model/core'
 require 'reality/model/model_element'

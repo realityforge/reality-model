@@ -160,7 +160,7 @@ end
         unless child.custom_initialize?
           code += <<-RUBY
   def #{child.inverse_access_method}(#{child.id_method}, options = {}, &block)
-    #{child.repository.model_container}::#{child.model_classname}.new(#{self.container_key.nil? ? '' : 'self, '}#{child.id_method}, options, &block)
+    #{child.repository.model_container}::#{child.model_classname}.new(#{child.container_key.nil? ? '' : 'self, '}#{child.id_method}, options, &block)
   end
 
           RUBY
