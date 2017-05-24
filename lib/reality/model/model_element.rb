@@ -195,7 +195,7 @@ end
   private
 
   def register_#{child.inverse_access_method}(#{child.inverse_access_method})
-    #{child.repository.log_container}.error("Attempting to register duplicate #{child.inverse_access_method} definition with #{child.id_method} '\#{#{child.id_method}}'") if #{child.inverse_access_method}_by_#{child.id_method}?(#{child.inverse_access_method}.#{child.id_method})
+    #{child.repository.log_container}.error("Attempting to register duplicate #{child.inverse_access_method} definition with #{child.id_method} '\#{#{child.inverse_access_method}.#{child.id_method}}'") if #{child.inverse_access_method}_by_#{child.id_method}?(#{child.inverse_access_method}.#{child.id_method})
     #{child.inverse_access_method}_map[#{child.inverse_access_method}.#{child.id_method}.to_s] = #{child.inverse_access_method}
   end
 

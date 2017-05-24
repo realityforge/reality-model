@@ -148,7 +148,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
   private
 
   def register_component(component)
-    Reality::Model::TestCase::MyContainer.error("Attempting to register duplicate component definition with name '\#{name}'") if component_by_name?(component.name)
+    Reality::Model::TestCase::MyContainer.error("Attempting to register duplicate component definition with name '\#{component.name}'") if component_by_name?(component.name)
     component_map[component.name.to_s] = component
   end
 
@@ -193,7 +193,7 @@ CODE
   private
 
   def register_component(component)
-    Reality::Model::TestCase::MyContainer.error("Attempting to register duplicate component definition with name '\#{name}'") if component_by_name?(component.name)
+    Reality::Model::TestCase::MyContainer.error("Attempting to register duplicate component definition with name '\#{component.name}'") if component_by_name?(component.name)
     component_map[component.name.to_s] = component
   end
 
@@ -438,7 +438,7 @@ class Project
   private
 
   def register_bundle(bundle)
-    Reality::Model::TestCase::MyContainer.error("Attempting to register duplicate bundle definition with name '\#{name}'") if bundle_by_name?(bundle.name)
+    Reality::Model::TestCase::MyContainer.error("Attempting to register duplicate bundle definition with name '\#{bundle.name}'") if bundle_by_name?(bundle.name)
     bundle_map[bundle.name.to_s] = bundle
   end
 
