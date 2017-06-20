@@ -130,6 +130,10 @@ class #{self.model_classname}
 
   public
 
+  def to_s
+    "#{self.model_classname}[\#{self.#{self.id_method}}]"
+  end
+
   def <=>(other)
     self.#{self.id_method} <=> other.#{self.id_method}
   end

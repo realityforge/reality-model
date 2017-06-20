@@ -225,6 +225,10 @@ class Bundle
 
   public
 
+  def to_s
+    "Bundle[\#{self.name}]"
+  end
+
   def <=>(other)
     self.name <=> other.name
   end
@@ -272,6 +276,10 @@ class Bundle
 
   public
 
+  def to_s
+    "Bundle[\#{self.name}]"
+  end
+
   def <=>(other)
     self.name <=> other.name
   end
@@ -315,6 +323,10 @@ class Bundle
   end
 
   public
+
+  def to_s
+    "Bundle[\#{self.name}]"
+  end
 
   def <=>(other)
     self.name <=> other.name
@@ -363,6 +375,10 @@ class Bundle
   end
 
   public
+
+  def to_s
+    "Bundle[\#{self.name}]"
+  end
 
   def <=>(other)
     self.name <=> other.name
@@ -447,6 +463,10 @@ class Project
   end
 
   public
+
+  def to_s
+    "Project[\#{self.name}]"
+  end
 
   def <=>(other)
     self.name <=> other.name
