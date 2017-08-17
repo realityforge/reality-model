@@ -6,4 +6,3 @@ This library provides basic classes used to setup a domain model using ruby clas
 domain model primarily consists of model elements container within other model elements.
 The library has been extracted from the nine different projects and consolidated using a
 single model.
-
