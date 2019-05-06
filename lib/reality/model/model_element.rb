@@ -204,7 +204,7 @@ end
   end
 
   def #{child.inverse_access_method}_map
-    @#{child.inverse_access_method}_map ||= Reality::OrderedHash.new
+    @#{child.inverse_access_method}_map ||= {}
   end
         RUBY
         # @formatter:on

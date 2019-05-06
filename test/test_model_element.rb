@@ -153,7 +153,7 @@ class Reality::Model::TestModelElement < Reality::Model::TestCase
   end
 
   def component_map
-    @component_map ||= Reality::OrderedHash.new
+    @component_map ||= {}
   end
 CODE
   end
@@ -198,7 +198,7 @@ CODE
   end
 
   def component_map
-    @component_map ||= Reality::OrderedHash.new
+    @component_map ||= {}
   end
 CODE
   end
@@ -459,7 +459,7 @@ class Project
   end
 
   def bundle_map
-    @bundle_map ||= Reality::OrderedHash.new
+    @bundle_map ||= {}
   end
 
   public
